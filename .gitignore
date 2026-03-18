@@ -1,0 +1,37 @@
+# Runtime artifacts
+results/
+transcript.txt
+results_summary.md
+
+# TTS model files (user downloads locally)
+*.onnx
+*.bin
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+.venv/
+venv/
+
+# Claude session
+.claude/scheduled_tasks.lock
+
+# IDE
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

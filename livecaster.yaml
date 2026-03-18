@@ -1,0 +1,73 @@
+# livecaster.yaml — Claude LiveCaster configuration
+#
+# This file tells the announcer how to parse your logs, who the contestants
+# are, and what style of commentary to generate.
+# The defaults here match the built-in simulation script.
+
+# Event name (used in transcript headers and commentary)
+name: "AI Model Race"
+
+# ---------------------------------------------------------------------------
+# Log parsing
+# ---------------------------------------------------------------------------
+
+# When this string appears in the last few lines of the log,
+# the race is considered complete. The announcer delivers a final
+# wrap-up and auto-cancels the /loop.
+completion_marker: "all tasks in all configurations have finished on all providers"
+
+# Shell command to extract a leaderboard from the log.
+# {log_file} is replaced with the active log path at runtime.
+# Output should be sorted with the leader on top.
+leaderboard_command: >
+  grep "task has finished" {log_file}
+  | sed 's/.*] //'
+  | cut -d: -f1-2
+  | sort | uniq -c | sort -rn
+
+# ---------------------------------------------------------------------------
+# Contestants
+# ---------------------------------------------------------------------------
+
+# Names the announcer should use in commentary. These should match
+# how contestants appear in your log output.
+contestants:
+  - "Claude Sonnet 4.6"
+  - "Claude Opus 4.6"
+  - "GPT-5.4"
+  - "GPT-5.2"
+  - "Gemini 3.1 Pro"
+  - "Gemini 2.5 Flash"
+
+# Short names for provider groups (used after first mention)
+provider_short_names:
+  anthropic: "Claude"
+  openai: "GPT"
+  google: "Gemini"
+
+# ---------------------------------------------------------------------------
+# Commentary style
+# ---------------------------------------------------------------------------
+
+persona: |
+  Ken Squier narrating a championship race between AI models.
+  Racing metaphors: pulling ahead, gaining ground, the homestretch.
+  Call out the leader and close battles.
+  Treat ERR lines as dramatic setbacks; mention Score when a failed
+  task still scored high (e.g. "scored 87 but just missed").
+  2-4 sentences, under 80 words, plain ASCII only.
+
+# ---------------------------------------------------------------------------
+# TTS settings
+# ---------------------------------------------------------------------------
+
+voice: "am_michael"
+speed: 0.9
+
+# ---------------------------------------------------------------------------
+# Timing
+# ---------------------------------------------------------------------------
+
+# Lines of log to read per minute of /loop interval.
+# Actual tail size = interval_mins * this value, clamped to 60-500 lines.
+log_lines_per_minute: 50
