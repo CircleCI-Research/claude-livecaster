@@ -1,5 +1,5 @@
 # Claude LiveCaster
-Real-time AI voice announcer for races, benchmarks, and long-running processes. Watches your logs, generates sports-style play-by-play commentary, and speaks it aloud using fast local text-to-speech (TTS). Powered by Claude. No cloud TTS APIs required.
+Real-time AI voice announcer for races, benchmarks, and long-running agent processes in Claude Code. Watches your logs, generates sports-style play-by-play commentary, and speaks it aloud using fast local text-to-speech (TTS). Powered by Claude. No cloud TTS APIs required.
 
 ## See it in action! 🎥
 https://github.com/user-attachments/assets/be8cf774-b16b-409e-9bbf-ee1789cc7227
