@@ -1,9 +1,9 @@
-# Code Review Roundup — PRs racing through the review gauntlet
+# App Build Journey — solo narration of building a Next.js SaaS app
 #
-# Five pull requests compete to get merged. Reviews, CI checks,
-# merge conflicts, and change requests stand in the way.
+# One coding agent builds a complete SaaS application from scratch.
+# No competition — just the journey from `create-next-app` to launch.
 
-name: "Code Review Roundup"
+name: "App Build Journey"
 
 # ---------------------------------------------------------------------------
 # Simulation data
@@ -11,62 +11,50 @@ name: "Code Review Roundup"
 
 simulation:
   runs:
-    - provider: "feature"
-      display_name: "feat/auth-overhaul"
-      model_id: "auth-overhaul"
+    - provider: "agent"
+      display_name: "Next.js SaaS App"
+      model_id: "nextjs-saas"
       rpm: 10
-      timing: [14, 30]
-    - provider: "bugfix"
-      display_name: "fix/payment-race-condition"
-      model_id: "payment-fix"
-      rpm: 10
-      timing: [8, 18]
-    - provider: "refactor"
-      display_name: "refactor/api-v2-migration"
-      model_id: "api-v2"
-      rpm: 8
-      timing: [16, 35]
-    - provider: "feature"
-      display_name: "feat/real-time-notifications"
-      model_id: "realtime-notifs"
-      rpm: 10
-      timing: [12, 26]
-    - provider: "chore"
-      display_name: "chore/dependency-upgrade"
-      model_id: "dep-upgrade"
-      rpm: 10
-      timing: [6, 14]
+      timing: [15, 40]
 
   tasks:
-    - "open - PR created and description written - v1"
-    - "ci - lint check running - v1"
-    - "ci - unit tests running - v1"
-    - "ci - integration tests running - v1"
-    - "ci - build verification - v1"
-    - "review - first reviewer assigned - v1"
-    - "review - initial code review comments - v1"
-    - "revision - addressing review feedback round 1 - v1"
-    - "ci - re-running checks after push - v1"
-    - "review - second reviewer looking at changes - v1"
-    - "review - architecture discussion in comments - v1"
-    - "revision - addressing review feedback round 2 - v1"
-    - "ci - all checks passing - v1"
-    - "conflict - merge conflict with main detected - v1"
-    - "conflict - rebasing and resolving conflicts - v1"
-    - "ci - final check run after rebase - v1"
-    - "review - final approval received - v1"
-    - "review - second approval received - v1"
-    - "merge - squash and merge to main - v1"
-    - "post-merge - branch cleanup and ticket update - v1"
+    - "scaffold - create-next-app with TypeScript - v1"
+    - "scaffold - install Tailwind and shadcn-ui - v1"
+    - "scaffold - configure ESLint and Prettier - v1"
+    - "database - design Postgres schema with Prisma - v1"
+    - "database - seed script with sample data - v1"
+    - "auth - NextAuth with email magic links - v1"
+    - "auth - Google OAuth provider - v1"
+    - "auth - role-based access control middleware - v1"
+    - "ui - landing page with hero and CTA - v1"
+    - "ui - pricing page with monthly and annual toggle - v1"
+    - "ui - signup and onboarding flow - v1"
+    - "feature - user dashboard with activity feed - v1"
+    - "feature - settings page with profile editor - v1"
+    - "feature - team invitation system - v1"
+    - "integration - Stripe checkout and billing portal - v1"
+    - "integration - webhook handler for payment events - v1"
+    - "integration - transactional email with Resend - v1"
+    - "feature - file upload with S3 presigned URLs - v1"
+    - "feature - global search with command palette - v1"
+    - "ui - admin panel with user management - v1"
+    - "testing - unit tests for API routes - v1"
+    - "testing - integration tests for auth flow - v1"
+    - "testing - Playwright e2e test suite - v1"
+    - "perf - image optimization and next-image - v1"
+    - "perf - bundle analysis and dynamic imports - v1"
+    - "security - rate limiting on API routes - v1"
+    - "security - CSP headers and input sanitization - v1"
+    - "deploy - Vercel project setup and env vars - v1"
+    - "deploy - custom domain and DNS configuration - v1"
+    - "launch - Lighthouse audit scoring above 90 - v1"
 
-  error_rate: 0.15
+  error_rate: 0.06
   error_messages:
-    - "CHANGES REQUESTED: needs error handling for edge case"
-    - "MERGE CONFLICT: 4 files conflict with main"
-    - "CI REGRESSION: integration test broke after rebase"
-    - "REVIEW BLOCKED: waiting on team lead approval"
-    - "NACK: reviewer disagrees with approach"
-    - "STALE: branch is 47 commits behind main"
+    - "type error: Property does not exist on type"
+    - "Prisma migration failed: column already exists"
+    - "build error: module not found"
+    - "test failed: expected 200 but got 401"
 
 # ---------------------------------------------------------------------------
 # Announcer config
@@ -77,31 +65,27 @@ completion_marker: "all tasks in all configurations have finished on all provide
 leaderboard_command: >
   grep "task has finished" {log_file}
   | sed 's/.*] //'
-  | cut -d: -f1-2
-  | sort | uniq -c | sort -rn
+  | cut -d: -f3-
+  | sed 's/: task has finished.*//'
+  | tail -8
 
 contestants:
-  - "feat/auth-overhaul"
-  - "fix/payment-race-condition"
-  - "refactor/api-v2-migration"
-  - "feat/real-time-notifications"
-  - "chore/dependency-upgrade"
+  - "Next.js SaaS App"
 
 provider_short_names:
-  feature: "Features"
-  bugfix: "Bugfixes"
-  refactor: "Refactors"
-  chore: "Chores"
+  agent: "Agent"
 
 persona: |
-  Rodeo announcer narrating pull requests trying to survive the review gauntlet.
-  Rodeo metaphors: getting bucked, hanging on, riding to the buzzer, wrangling conflicts.
-  Treat merge conflicts as wild broncos. Change requests are judges scoring low.
-  Approvals are the crowd going wild. Merges are victorious dismounts.
-  Call out which PR is closest to merging and who just got bucked by CI.
+  Encouraging pair programmer and dev mentor narrating a solo app build.
+  Speak as if sitting next to the developer, watching them work.
+  Celebrate completed milestones. Empathize with errors and setbacks.
+  Note the overall progress -- how far through the build we are.
+  No competition references -- this is a journey, not a race.
+  Example: "Auth is in place, the dashboard is looking great -- now we are
+  wiring up Stripe. This is where it gets real."
   2-4 sentences, under 80 words, plain ASCII only.
 
-voice: "af_sky"
+voice: "af_heart"
 speed: 0.9
 
 log_lines_per_minute: 50

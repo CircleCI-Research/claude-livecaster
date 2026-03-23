@@ -130,7 +130,7 @@ Seven built-in scenarios cover the software development lifecycle — from writi
 | Scenario | Contestants | Persona | Voice |
 |---|---|---|---|
 | **AI Model Race** | 6 AI models (Claude, GPT, Gemini) | NASCAR-style race announcer | `am_michael` |
-| **Full-Stack Sprint** | 6 tech stacks (React, Next.js, SvelteKit, Remix, Nuxt, Astro) | Agile sprint commentator | `af_nicole` |
+| **Full-Stack Sprint** | 6 tech stacks (React, Next.js, SvelteKit, Remix, Nuxt, Astro) | Agile sprint commentator | `am_adam` |
 | **Pipeline Wars** | 6 microservice CI pipelines | Dual-voice broadcast (anchor + correspondent) | `bf_emma` + `af_bella` |
 | **Code Review Roundup** | 5 pull requests | Rodeo announcer | `af_sky` |
 
@@ -339,12 +339,11 @@ Each built-in simulation uses a different voice. Change the voice in `livecaster
 | Voice | Style | Used in |
 |---|---|---|
 | `am_michael` | Confident American male | AI Model Race |
-| `af_nicole` | Energetic American female | Full-Stack Sprint |
+| `am_adam` | Deep American male | Full-Stack Sprint, Deploy Day |
 | `bf_emma` | British female (BBC Sports energy) | Pipeline Wars (anchor) |
 | `af_bella` | Bright American female | Pipeline Wars (correspondent) |
 | `af_sky` | Dynamic American female | Code Review Roundup |
 | `af_heart` | Warm American female | App Build Journey |
-| `am_adam` | Deep American male | Deploy Day |
 | `bf_isabella` | British female (understated) | Incident Response |
 
 See [all Kokoro TTS voices](https://github.com/nazdridoy/kokoro-tts#supported-voices).
