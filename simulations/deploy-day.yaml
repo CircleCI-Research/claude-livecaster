@@ -1,0 +1,87 @@
+# Deploy Day — solo narration of a production deployment
+#
+# Version 2.4.0 rolls out from staging to canary to full production.
+# Every gate, every metric check, every nerve-wracking percentage increase.
+
+name: "Deploy Day"
+
+# ---------------------------------------------------------------------------
+# Simulation data
+# ---------------------------------------------------------------------------
+
+simulation:
+  runs:
+    - provider: "release"
+      display_name: "v2.4.0 Release"
+      model_id: "v2-4-0"
+      rpm: 10
+      timing: [12, 35]
+
+  tasks:
+    - "prep - changelog generation from commits - v1"
+    - "prep - version bump in package.json - v1"
+    - "prep - release branch cut from main - v1"
+    - "ci - full test suite on release branch - v1"
+    - "ci - security scan and license check - v1"
+    - "ci - build artifacts and docker image - v1"
+    - "staging - deploy to staging environment - v1"
+    - "staging - QA smoke test suite - v1"
+    - "staging - performance regression check - v1"
+    - "gate - stakeholder sign-off received - v1"
+    - "prod - canary deploy at 5 percent traffic - v1"
+    - "monitor - error rate check on canary - v1"
+    - "monitor - latency p99 within threshold - v1"
+    - "prod - expand canary to 25 percent traffic - v1"
+    - "monitor - error rate steady at 25 percent - v1"
+    - "monitor - memory and CPU utilization normal - v1"
+    - "prod - expand to 50 percent traffic - v1"
+    - "monitor - no anomalies at 50 percent - v1"
+    - "prod - full rollout to 100 percent traffic - v1"
+    - "monitor - all health endpoints green - v1"
+    - "monitor - database connection pool stable - v1"
+    - "post-deploy - CDN cache purge completed - v1"
+    - "post-deploy - release notes published to GitHub - v1"
+    - "post-deploy - Slack announcement sent - v1"
+    - "post-deploy - old version decommissioned - v1"
+
+  error_rate: 0.08
+  error_messages:
+    - "WARN: error rate spike to 2.3 percent on canary"
+    - "WARN: p99 latency 340ms exceeds 300ms threshold"
+    - "ALERT: memory usage trending upward on canary pods"
+    - "ROLLBACK CONSIDERED: anomaly detected in checkout flow"
+
+# ---------------------------------------------------------------------------
+# Announcer config
+# ---------------------------------------------------------------------------
+
+completion_marker: "all tasks in all configurations have finished on all providers"
+
+leaderboard_command: >
+  grep "task has finished" {log_file}
+  | sed 's/.*] //'
+  | cut -d: -f3-
+  | sed 's/: task has finished.*//'
+  | tail -8
+
+contestants:
+  - "v2.4.0 Release"
+
+provider_short_names:
+  release: "Release"
+
+persona: |
+  Mission control operator guiding a spacecraft through launch sequence,
+  but the spacecraft is a production deployment.
+  Calm, procedural, professional. Announce each gate clearance deliberately.
+  Treat canary percentage increases like orbital stage separations.
+  Errors are anomalies that demand attention but not panic.
+  Build tension during the canary ramp. Celebrate the full rollout with quiet pride.
+  Example: "We have confirmation of canary at 25 percent. All systems nominal.
+  Proceeding to 50."
+  2-3 sentences, under 70 words, plain ASCII only.
+
+voice: "am_adam"
+speed: 0.85
+
+log_lines_per_minute: 50

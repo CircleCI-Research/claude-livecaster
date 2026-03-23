@@ -34,7 +34,7 @@ The commentary style, voice, log parsing, and contestant names are all configura
 
 ## Quick Start
 
-**Try it in under 5 minutes — no API keys needed.**
+**Try it in under 5 minutes — simulations run locally, no additional API keys needed beyond Claude Code itself.**
 
 ### 1. Clone the repo
 
@@ -71,19 +71,21 @@ Then type:
 /livecaster-simulate with-announcer
 ```
 
-That's it. Six AI models will "race" through 30 tasks, and Claude will narrate the action live through your speakers. The whole thing takes ~5 minutes at 1x speed.
+You'll be asked to pick a scenario — try **AI Model Race** to start. Six AI models will "race" through 30 tasks while Claude narrates the action live through your speakers. The whole thing takes ~5 minutes at 1x speed.
 
 **Quick sprint** (shorter, faster):
 
 ```
-/livecaster-simulate 10 3 with-announcer
+/livecaster-simulate ai-model-race 10 3 with-announcer
 ```
 
 ## Prerequisites
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (the CLI for Claude)
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (the CLI for Claude — generates the commentary)
 - Python 3.9+ (for the simulation script and Kokoro TTS)
 - [Kokoro TTS](https://github.com/nazdridoy/kokoro-tts) — local text-to-speech
+
+> **Note:** Simulations generate synthetic log data locally (no external API calls), and TTS runs entirely on-device. The only API usage is Claude Code itself, which generates the commentary text.
 
 ### Installing Kokoro TTS
 
@@ -105,19 +107,54 @@ All commands are [Claude Code slash commands](https://docs.anthropic.com/en/docs
 
 | Command | Description |
 |---|---|
-| `/livecaster-simulate` | Run a zero-cost AI model race simulation (no API keys needed) |
+| `/livecaster-simulate` | Run a simulation (7 SDLC scenarios — synthetic data, no external APIs) |
 | `/livecaster-start` | Start watching an existing log file with live commentary |
 | `/livecaster-announce` | One tick of live commentary — meant to be called by `/loop` |
 | `/livecaster-stop` | Stop the process and finalize the commentary transcript |
 
-### Simulation (built-in demo)
+### Simulation (built-in demos)
 
 ```
-/livecaster-simulate                         # prompts about announcer + interval
-/livecaster-simulate with-announcer          # enables announcer, prompts for interval
-/livecaster-simulate with-announcer 2        # every 2 minutes, no questions asked
-/livecaster-simulate 10 3 with-announcer     # 10 tasks, 3x speed, with announcer
+/livecaster-simulate                                    # pick a scenario, then configure
+/livecaster-simulate with-announcer                     # pick scenario with voice enabled
+/livecaster-simulate pipeline-wars with-announcer       # jump straight to Pipeline Wars
+/livecaster-simulate deploy-day 15 2 with-announcer     # Deploy Day, 15 tasks, 2x speed
 ```
+
+## Simulations
+
+Seven built-in scenarios cover the software development lifecycle — from writing code to shipping, monitoring, and responding to incidents. Some are races (multiple contestants competing), others are solo narrations of a single process.
+
+### Races
+
+| Scenario | Contestants | Persona | Voice |
+|---|---|---|---|
+| **AI Model Race** | 6 AI models (Claude, GPT, Gemini) | NASCAR-style race announcer | `am_michael` |
+| **Full-Stack Sprint** | 6 tech stacks (React, Next.js, SvelteKit, Remix, Nuxt, Astro) | Agile sprint commentator | `am_adam` |
+| **Pipeline Wars** | 6 microservice CI pipelines | Dual-voice broadcast (anchor + correspondent) | `bf_emma` + `af_bella` |
+| **Code Review Roundup** | 5 pull requests | Rodeo announcer | `af_sky` |
+
+### Solo narrations
+
+| Scenario | Subject | Persona | Voice |
+|---|---|---|---|
+| **App Build Journey** | Building a Next.js SaaS app from scratch | Encouraging dev mentor / pair programmer | `af_heart` |
+| **Deploy Day** | Production deployment from staging to full rollout | Mission control operator | `am_adam` |
+| **Incident Response** | P1 production incident from alert to resolution | War room coordinator | `bf_isabella` |
+
+### Run a specific scenario
+
+```
+/livecaster-simulate ai-model-race with-announcer
+/livecaster-simulate full-stack-sprint with-announcer
+/livecaster-simulate pipeline-wars with-announcer        # dual-voice!
+/livecaster-simulate code-review-roundup with-announcer
+/livecaster-simulate app-build-journey with-announcer
+/livecaster-simulate deploy-day with-announcer
+/livecaster-simulate incident-response with-announcer
+```
+
+Or just run `/livecaster-simulate` and pick from the menu.
 
 ### Watch your own process
 
@@ -147,7 +184,7 @@ Then cancel the `/loop` in your session (type `/loop` and select cancel, or clos
 
 ## Configuration
 
-LiveCaster reads `livecaster.yaml` from your project root. The default config works with the built-in simulation out of the box.
+LiveCaster reads `livecaster.yaml` from your project root. When you run `/livecaster-simulate`, the selected scenario file from `simulations/` is copied to `livecaster.yaml` automatically.
 
 ```yaml
 # Event name (used in transcripts and commentary)
@@ -180,10 +217,26 @@ persona: |
   Treat error lines as dramatic setbacks.
   2-4 sentences, under 80 words, plain ASCII only.
 
-# TTS settings
+# TTS — single voice
 voice: "am_michael"
 speed: 0.9
 ```
+
+### Dual-voice mode
+
+The Pipeline Wars scenario uses two voices — a technical anchor and a field correspondent. Instead of a single `voice` key, use a `voices` list:
+
+```yaml
+voices:
+  - role: "anchor"
+    voice: "bf_emma"
+    speed: 0.9
+  - role: "correspondent"
+    voice: "af_bella"
+    speed: 0.95
+```
+
+The announcer generates labeled commentary (`[ANCHOR]` / `[CORRESPONDENT]`) and speaks each part with the appropriate voice. Any scenario can use dual-voice by switching from `voice` to `voices` in its YAML.
 
 ### Customizing for Your Own Process
 
@@ -281,38 +334,48 @@ Shorter intervals = more frequent updates (more dramatic, more tokens). Longer =
 
 ### Voice options
 
-Change the voice in `livecaster.yaml`:
+Each built-in simulation uses a different voice. Change the voice in `livecaster.yaml` or any scenario YAML:
 
-| Voice | Style |
-|---|---|
-| `am_michael` | Confident American male (default) |
-| `af_heart` | Warm American female |
-| `bf_emma` | British female (BBC Sports energy) |
-| `am_adam` | Deep American male |
-| `bf_isabella` | British female (understated) |
+| Voice | Style | Used in |
+|---|---|---|
+| `am_michael` | Confident American male | AI Model Race |
+| `am_adam` | Deep American male | Full-Stack Sprint, Deploy Day |
+| `bf_emma` | British female (BBC Sports energy) | Pipeline Wars (anchor) |
+| `af_bella` | Bright American female | Pipeline Wars (correspondent) |
+| `af_sky` | Dynamic American female | Code Review Roundup |
+| `af_heart` | Warm American female | App Build Journey |
+| `bf_isabella` | British female (understated) | Incident Response |
 
 See [all Kokoro TTS voices](https://github.com/nazdridoy/kokoro-tts#supported-voices).
 
 **Watch the transcript live in a split pane:**
 
 ```bash
-tail -f results/simulation/$(date +%Y-%m-%d)/*/transcript.txt
+tail -f results/simulation/*/$(date +%Y-%m-%d)/*/transcript.txt
 ```
 
 ## Project Structure
 
 ```
 claude-livecaster/
-├── livecaster.yaml                  # Configuration (log parsing, persona, TTS)
+├── livecaster.yaml                  # Active config (auto-copied from selected scenario)
 ├── CLAUDE.md                        # Project context for Claude Code
 ├── .claude/
 │   └── commands/
-│       ├── livecaster-simulate.md   # Zero-cost demo simulation
+│       ├── livecaster-simulate.md   # Simulation launcher (7 scenarios)
 │       ├── livecaster-start.md      # Watch any log file
 │       ├── livecaster-announce.md   # One commentary tick (for /loop)
 │       └── livecaster-stop.md       # Stop and finalize
+├── simulations/
+│   ├── ai-model-race.yaml          # Race: 6 AI models
+│   ├── full-stack-sprint.yaml      # Race: 6 tech stacks
+│   ├── pipeline-wars.yaml          # Race: 6 CI pipelines (dual-voice)
+│   ├── code-review-roundup.yaml    # Race: 5 pull requests
+│   ├── app-build-journey.yaml      # Solo: build a Next.js SaaS app
+│   ├── deploy-day.yaml             # Solo: production deployment
+│   └── incident-response.yaml      # Solo: P1 incident response
 ├── scripts/
-│   ├── simulate.py                  # AI model race simulation (Python)
+│   ├── simulate.py                  # Data-driven simulation engine (Python)
 │   └── open-dashboard.sh            # Opens Terminal.app tail windows (macOS)
 ├── README.md
 └── LICENSE                          # MIT
@@ -328,10 +391,11 @@ This repo generalizes the announcer into a standalone tool that works with any l
 
 Contributions welcome! Some ideas:
 
-- **New personas** — baseball announcer, nature documentary narrator, auctioneer
-- **New simulation scenarios** — ML training, CI/CD pipelines, game tournaments
+- **New simulation scenarios** — ML training runs, game tournaments, migration projects, security audits
+- **New personas** — nature documentary narrator, auctioneer, baseball announcer
 - **Cross-platform dashboard** — `open-dashboard.sh` is currently macOS-only
 - **Transcript viewer** — a nice HTML/web viewer for commentary transcripts
+- **More dual-voice combos** — play-by-play + color commentary, narrator + analyst
 
 ## License
 

@@ -1,0 +1,88 @@
+# Incident Response — solo narration of a production incident
+#
+# INC-4072: cascading failure in the payment service.
+# From the first PagerDuty alert to the postmortem.
+
+name: "Incident Response"
+
+# ---------------------------------------------------------------------------
+# Simulation data
+# ---------------------------------------------------------------------------
+
+simulation:
+  runs:
+    - provider: "ops"
+      display_name: "INC-4072 Investigation"
+      model_id: "inc-4072"
+      rpm: 10
+      timing: [10, 30]
+
+  tasks:
+    - "alert - PagerDuty critical alert received - v1"
+    - "triage - initial severity assessment P1 - v1"
+    - "comms - status page updated to investigating - v1"
+    - "comms - incident channel created in Slack - v1"
+    - "diagnose - application log analysis - v1"
+    - "diagnose - metric dashboard review - v1"
+    - "diagnose - recent deploy diff check - v1"
+    - "hypothesis - database connection pool exhaustion suspected - v1"
+    - "investigate - database connection count query - v1"
+    - "investigate - slow query log analysis - v1"
+    - "confirm - root cause identified connection leak in ORM - v1"
+    - "mitigate - connection pool limit increased temporarily - v1"
+    - "fix - hotfix branch created for connection leak - v1"
+    - "fix - patch implemented and unit tested - v1"
+    - "fix - PR approved and merged to main - v1"
+    - "deploy - hotfix deployed to staging - v1"
+    - "verify - staging load test confirms fix - v1"
+    - "deploy - canary deploy to production - v1"
+    - "monitor - error rate returning to baseline - v1"
+    - "deploy - full production rollout - v1"
+    - "monitor - all services healthy and stable - v1"
+    - "comms - status page updated to resolved - v1"
+    - "comms - customer notification sent - v1"
+    - "review - incident timeline documented - v1"
+    - "review - postmortem draft with action items - v1"
+
+  error_rate: 0.10
+  error_messages:
+    - "FALSE LEAD: initial hypothesis about DNS was incorrect"
+    - "ESCALATION: secondary alert from downstream service"
+    - "SETBACK: hotfix introduced regression in staging"
+    - "PRESSURE: customer support queue at 247 tickets"
+    - "COMPLICATION: on-call engineer has limited context on this service"
+
+# ---------------------------------------------------------------------------
+# Announcer config
+# ---------------------------------------------------------------------------
+
+completion_marker: "all tasks in all configurations have finished on all providers"
+
+leaderboard_command: >
+  grep "task has finished" {log_file}
+  | sed 's/.*] //'
+  | cut -d: -f3-
+  | sed 's/: task has finished.*//'
+  | tail -8
+
+contestants:
+  - "INC-4072 Investigation"
+
+provider_short_names:
+  ops: "Ops"
+
+persona: |
+  War room coordinator narrating a production incident response.
+  Professional urgency -- not panicked, but clearly the stakes are high.
+  Track the investigation phases: triage, diagnosis, mitigation, fix, recovery.
+  Treat ERR lines as complications that make the situation worse.
+  Build tension during diagnosis, relief during recovery.
+  When the fix is deployed, let the relief show.
+  Example: "Root cause confirmed -- a connection leak in the ORM layer.
+  Hotfix is in staging now. Lets see if this holds."
+  2-3 sentences, under 70 words, plain ASCII only.
+
+voice: "bf_isabella"
+speed: 0.9
+
+log_lines_per_minute: 50

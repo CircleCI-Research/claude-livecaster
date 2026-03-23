@@ -6,7 +6,8 @@ Real-time AI voice announcer for Claude Code. See README.md for full documentati
 
 - `.claude/commands/` — Slash commands (the core of LiveCaster)
 - `scripts/` — Supporting scripts (simulation, dashboard)
-- `livecaster.yaml` — Default configuration (matches the built-in simulation)
+- `simulations/` — YAML scenario files (7 built-in SDLC simulations)
+- `livecaster.yaml` — Active configuration (auto-copied from selected scenario)
 - `results/` — Runtime output directory (gitignored)
 
 ## Key patterns
@@ -14,7 +15,8 @@ Real-time AI voice announcer for Claude Code. See README.md for full documentati
 - State is stored in `/tmp/.livecaster_*` files during a session
 - The announcer runs via `/loop` — never as a background Task agent (they lose Bash permissions)
 - Commentary passes through `sed` decimal-to-word conversion before TTS (`4.6` → `4 point 6`)
-- Config is read from `livecaster.yaml` in the project root
+- Config is read from `livecaster.yaml` in the project root (copied from `simulations/` at simulate time)
+- Dual-voice mode: if `voices` list is present in config (instead of single `voice`), announcer alternates between voices
 
 ## TTS
 
@@ -23,7 +25,7 @@ Default voice: `am_michael` at speed 0.9
 
 ## Slash commands
 
-- `/livecaster-simulate` — Demo with simulated data (no API keys needed)
+- `/livecaster-simulate` — Run a simulation (7 SDLC scenarios — synthetic data, no external APIs)
 - `/livecaster-start` — Watch a real log file
 - `/livecaster-announce` — One commentary tick (for `/loop`)
 - `/livecaster-stop` — Stop and finalize transcript

@@ -1,0 +1,128 @@
+# Pipeline Wars — CI/CD pipelines racing across microservices (dual-voice)
+#
+# Six microservice CI pipelines run simultaneously.
+# Dual-voice broadcast: a technical anchor and an excitable field correspondent.
+
+name: "Pipeline Wars"
+
+# ---------------------------------------------------------------------------
+# Simulation data
+# ---------------------------------------------------------------------------
+
+simulation:
+  runs:
+    - provider: "backend"
+      display_name: "Auth Service"
+      model_id: "auth-svc"
+      rpm: 10
+      timing: [8, 20]
+    - provider: "backend"
+      display_name: "Payment Service"
+      model_id: "payment-svc"
+      rpm: 8
+      timing: [12, 28]
+    - provider: "platform"
+      display_name: "User Service"
+      model_id: "user-svc"
+      rpm: 10
+      timing: [7, 18]
+    - provider: "platform"
+      display_name: "Notification Service"
+      model_id: "notification-svc"
+      rpm: 10
+      timing: [6, 15]
+    - provider: "data"
+      display_name: "Search Service"
+      model_id: "search-svc"
+      rpm: 10
+      timing: [10, 24]
+    - provider: "data"
+      display_name: "Analytics Service"
+      model_id: "analytics-svc"
+      rpm: 10
+      timing: [9, 22]
+
+  tasks:
+    - "checkout - clone repo and install deps - v1"
+    - "lint - eslint and prettier check - v1"
+    - "typecheck - typescript strict mode - v1"
+    - "unit-tests - jest test suite - v1"
+    - "unit-tests - coverage threshold check - v1"
+    - "integration-tests - database integration - v1"
+    - "integration-tests - API contract tests - v1"
+    - "security - SAST scan with semgrep - v1"
+    - "security - dependency audit npm audit - v1"
+    - "security - secret detection scan - v1"
+    - "build - docker image build - v1"
+    - "build - push to container registry - v1"
+    - "deploy-staging - helm upgrade staging - v1"
+    - "smoke-tests - staging health checks - v1"
+    - "smoke-tests - API endpoint validation - v1"
+    - "load-test - k6 performance baseline - v1"
+    - "approval - staging sign-off gate - v1"
+    - "deploy-prod - canary rollout 5 percent - v1"
+    - "monitor - error rate check canary - v1"
+    - "deploy-prod - full rollout 100 percent - v1"
+    - "monitor - latency p99 check - v1"
+    - "monitor - health endpoint verification - v1"
+    - "release - git tag and changelog - v1"
+    - "notify - slack deployment notification - v1"
+
+  error_rate: 0.12
+  error_messages:
+    - "FAIL 3 unit tests failed in auth.test.ts"
+    - "CRITICAL semgrep found SQL injection risk"
+    - "WARN dependency has known CVE-2026-1847"
+    - "FLAKY test timed out after 30s - possible race condition"
+    - "ERROR docker build OOM killed"
+    - "FAIL coverage dropped below 80 percent threshold"
+    - "ERROR staging health check returned 503"
+
+# ---------------------------------------------------------------------------
+# Announcer config (dual-voice)
+# ---------------------------------------------------------------------------
+
+completion_marker: "all tasks in all configurations have finished on all providers"
+
+leaderboard_command: >
+  grep "task has finished" {log_file}
+  | sed 's/.*] //'
+  | cut -d: -f1-2
+  | sort | uniq -c | sort -rn
+
+contestants:
+  - "Auth Service"
+  - "Payment Service"
+  - "User Service"
+  - "Notification Service"
+  - "Search Service"
+  - "Analytics Service"
+
+provider_short_names:
+  backend: "Backend"
+  platform: "Platform"
+  data: "Data"
+
+persona: |
+  Two-person CI/CD broadcast booth.
+
+  ANCHOR: Technical anchor delivering factual updates. Measured, professional tone.
+  Reports which pipelines are ahead, which stages just completed, overall progress.
+  Example: "Auth Service has cleared all security scans and is now deploying to staging."
+
+  CORRESPONDENT: Excitable field correspondent who reacts emotionally to events.
+  Celebrates green builds, panics at failures, builds suspense around deploy gates.
+  Example: "Payment Service just FAILED its security scan -- a SQL injection risk! This could delay the whole release!"
+
+  Each voice speaks 1-2 sentences. Under 100 words total across both voices.
+  Plain ASCII only. Separate the two voices with [ANCHOR] and [CORRESPONDENT] labels.
+
+voices:
+  - role: "anchor"
+    voice: "bf_emma"
+    speed: 0.9
+  - role: "correspondent"
+    voice: "af_bella"
+    speed: 0.95
+
+log_lines_per_minute: 50
