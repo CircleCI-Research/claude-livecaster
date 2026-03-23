@@ -1,0 +1,117 @@
+# AI Model Race — the classic LiveCaster simulation
+#
+# Six AI models compete head-to-head on coding, reasoning, and architecture tasks.
+# The original simulation that started it all.
+
+name: "AI Model Race"
+
+# ---------------------------------------------------------------------------
+# Simulation data (used by simulate.py)
+# ---------------------------------------------------------------------------
+
+simulation:
+  runs:
+    - provider: "openai"
+      display_name: "GPT-5.4 (high reasoning)"
+      model_id: "gpt-5.4"
+      rpm: 10
+      timing: [20, 35]
+    - provider: "openai"
+      display_name: "GPT-5.2 (high reasoning)"
+      model_id: "gpt-5.2"
+      rpm: 20
+      timing: [15, 27]
+    - provider: "google"
+      display_name: "Gemini 3.1 Pro (high thinking)"
+      model_id: "gemini-3.1-pro"
+      rpm: 3
+      timing: [10, 20]
+    - provider: "google"
+      display_name: "Gemini 2.5 Flash"
+      model_id: "gemini-2.5-flash"
+      rpm: 10
+      timing: [5, 13]
+    - provider: "anthropic"
+      display_name: "Claude Opus 4.6 (extended thinking)"
+      model_id: "claude-opus-4-6"
+      rpm: 10
+      timing: [18, 32]
+    - provider: "anthropic"
+      display_name: "Claude Sonnet 4.6 (extended thinking)"
+      model_id: "claude-sonnet-4-6"
+      rpm: 10
+      timing: [12, 22]
+
+  tasks:
+    - "reasoning - logic grid puzzle - v1"
+    - "reasoning - bridge crossing - v1"
+    - "reasoning - color and number - v1"
+    - "coding - binary search implementation - v1"
+    - "coding - linked list reversal - v1"
+    - "coding - async pipeline - v1"
+    - "debugging - race condition - v1"
+    - "debugging - memory leak detection - v1"
+    - "debugging - off by one error - v1"
+    - "architecture - microservice design - v1"
+    - "architecture - caching strategy - v1"
+    - "architecture - event sourcing - v1"
+    - "devops - pipeline optimization - v1"
+    - "devops - container orchestration - v1"
+    - "devops - secret management - v1"
+    - "testing - property based testing - v1"
+    - "testing - integration test design - v1"
+    - "testing - mutation testing - v1"
+    - "security - input validation - v1"
+    - "security - auth flow design - v1"
+    - "data - query optimization - v1"
+    - "data - schema migration - v1"
+    - "api - rate limiter design - v1"
+    - "api - versioning strategy - v1"
+    - "system - distributed consensus - v1"
+    - "system - load balancer config - v1"
+    - "system - circuit breaker - v1"
+    - "refactoring - extract service - v1"
+    - "refactoring - dependency injection - v1"
+    - "documentation - api specification - v1"
+
+  error_rate: 0.08
+  error_messages:
+    - "API rate limit exceeded (429)"
+
+# ---------------------------------------------------------------------------
+# Announcer config (copied to livecaster.yaml at runtime)
+# ---------------------------------------------------------------------------
+
+completion_marker: "all tasks in all configurations have finished on all providers"
+
+leaderboard_command: >
+  grep "task has finished" {log_file}
+  | sed 's/.*] //'
+  | cut -d: -f1-2
+  | sort | uniq -c | sort -rn
+
+contestants:
+  - "Claude Sonnet 4.6"
+  - "Claude Opus 4.6"
+  - "GPT-5.4"
+  - "GPT-5.2"
+  - "Gemini 3.1 Pro"
+  - "Gemini 2.5 Flash"
+
+provider_short_names:
+  anthropic: "Claude"
+  openai: "GPT"
+  google: "Gemini"
+
+persona: |
+  Ken Squier narrating a championship race between AI models.
+  Racing metaphors: pulling ahead, gaining ground, the homestretch.
+  Call out the leader and close battles.
+  Treat ERR lines as dramatic setbacks; mention Score when a failed
+  task still scored high (e.g. "scored 87 but just missed").
+  2-4 sentences, under 80 words, plain ASCII only.
+
+voice: "am_michael"
+speed: 0.9
+
+log_lines_per_minute: 50

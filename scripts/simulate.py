@@ -2,15 +2,16 @@
 """
 Claude LiveCaster — simulation script.
 
-Generates realistic log output for an AI model race without making any API calls.
-The voice announcer can't tell the difference from a real eval run.
+Generates realistic log output without making any API calls.
+The voice announcer can't tell the difference from a real run.
 
 Usage:
-    python3 scripts/simulate.py [log_file] [num_tasks] [speed]
+    python3 scripts/simulate.py <log_file> <num_tasks> <speed> [--scenario <yaml_path>]
 
-    log_file   — output path (default: logs/eval.log)
-    num_tasks  — tasks per model config (default: 15)
-    speed      — simulation speed multiplier (default: 1, higher = faster)
+    log_file       — output path (default: logs/eval.log)
+    num_tasks      — tasks per contestant (default: 15)
+    speed          — simulation speed multiplier (default: 1, higher = faster)
+    --scenario     — path to a simulation YAML file (optional; uses built-in defaults if omitted)
 """
 
 import sys
@@ -20,14 +21,7 @@ import random
 import string
 from datetime import datetime
 
-LOG_FILE = sys.argv[1] if len(sys.argv) > 1 else "logs/eval.log"
-NUM_TASKS = int(sys.argv[2]) if len(sys.argv) > 2 else 15
-SPEED = float(sys.argv[3]) if len(sys.argv) > 3 else 1.0
-
-os.makedirs(os.path.dirname(LOG_FILE) or ".", exist_ok=True)
-
-# Model configurations: (provider, display_name, model_id, rpm, (min_secs, max_secs))
-RUNS = [
+DEFAULT_RUNS = [
     ("openai",    "GPT-5.4 (high reasoning)",             "gpt-5.4",          10, (20, 35)),
     ("openai",    "GPT-5.2 (high reasoning)",             "gpt-5.2",          20, (15, 27)),
     ("google",    "Gemini 3.1 Pro (high thinking)",        "gemini-3.1-pro",    3, (10, 20)),
@@ -36,7 +30,7 @@ RUNS = [
     ("anthropic", "Claude Sonnet 4.6 (extended thinking)", "claude-sonnet-4-6", 10, (12, 22)),
 ]
 
-TASKS = [
+DEFAULT_TASKS = [
     "reasoning - logic grid puzzle - v1",
     "reasoning - bridge crossing - v1",
     "reasoning - color and number - v1",
@@ -69,6 +63,68 @@ TASKS = [
     "documentation - api specification - v1",
 ]
 
+DEFAULT_ERROR_RATE = 0.08
+
+DEFAULT_ERROR_MESSAGES = [
+    'API rate limit exceeded (429)',
+]
+
+
+def parse_args():
+    args = sys.argv[1:]
+    scenario_path = None
+    positional = []
+
+    i = 0
+    while i < len(args):
+        if args[i] == "--scenario" and i + 1 < len(args):
+            scenario_path = args[i + 1]
+            i += 2
+        else:
+            positional.append(args[i])
+            i += 1
+
+    log_file = positional[0] if len(positional) > 0 else "logs/eval.log"
+    num_tasks = int(positional[1]) if len(positional) > 1 else 15
+    speed = float(positional[2]) if len(positional) > 2 else 1.0
+
+    return log_file, num_tasks, speed, scenario_path
+
+
+def load_scenario(path):
+    import yaml
+    with open(path) as f:
+        cfg = yaml.safe_load(f)
+
+    sim = cfg.get("simulation", {})
+
+    runs = []
+    for r in sim.get("runs", []):
+        timing = r.get("timing", [10, 25])
+        runs.append((
+            r["provider"],
+            r["display_name"],
+            r.get("model_id", r["display_name"]),
+            r.get("rpm", 10),
+            (timing[0], timing[1]),
+        ))
+
+    tasks = sim.get("tasks", DEFAULT_TASKS)
+    error_rate = sim.get("error_rate", DEFAULT_ERROR_RATE)
+    error_messages = sim.get("error_messages", DEFAULT_ERROR_MESSAGES)
+
+    return runs or DEFAULT_RUNS, tasks, error_rate, error_messages
+
+
+LOG_FILE, NUM_TASKS, SPEED, SCENARIO_PATH = parse_args()
+
+if SCENARIO_PATH:
+    RUNS, TASKS, ERROR_RATE, ERROR_MESSAGES = load_scenario(SCENARIO_PATH)
+else:
+    RUNS, TASKS, ERROR_RATE, ERROR_MESSAGES = DEFAULT_RUNS, DEFAULT_TASKS, DEFAULT_ERROR_RATE, DEFAULT_ERROR_MESSAGES
+
+os.makedirs(os.path.dirname(LOG_FILE) or ".", exist_ok=True)
+
 task_count = min(NUM_TASKS, len(TASKS))
 providers = sorted(set(r[0] for r in RUNS))
 
@@ -87,7 +143,6 @@ def log(line):
         f.flush()
 
 
-# Clear log
 with open(LOG_FILE, "w") as f:
     pass
 
@@ -124,11 +179,11 @@ while any(idx < task_count for idx in run_state.values()):
 
         duration = f"{base_time:.6f}s"
 
-        # ~8% chance of a rate-limit error
-        if random.random() < 0.08:
+        if random.random() < ERROR_RATE:
+            err_msg = random.choice(ERROR_MESSAGES)
             log(
                 f'{ts()} ERR [{trace}] {provider}: {run_name}: {task}: '
-                f'task finished with error error="API rate limit exceeded (429)"'
+                f'task finished with error error="{err_msg}"'
             )
 
         log(f"{ts()} INF [{trace}] {provider}: {run_name}: {task}: task has finished in {duration}.")

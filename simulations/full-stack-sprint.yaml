@@ -1,0 +1,124 @@
+# Full-Stack Sprint — tech stacks racing to ship a web app
+#
+# Six tech stacks compete to build the same SaaS application.
+# Who ships first: React, Next.js, SvelteKit, Remix, Nuxt, or Astro?
+
+name: "Full-Stack Sprint"
+
+# ---------------------------------------------------------------------------
+# Simulation data
+# ---------------------------------------------------------------------------
+
+simulation:
+  runs:
+    - provider: "react"
+      display_name: "React + Express"
+      model_id: "react-express"
+      rpm: 10
+      timing: [12, 28]
+    - provider: "next"
+      display_name: "Next.js + Prisma"
+      model_id: "nextjs-prisma"
+      rpm: 10
+      timing: [10, 24]
+    - provider: "svelte"
+      display_name: "SvelteKit + Drizzle"
+      model_id: "sveltekit-drizzle"
+      rpm: 10
+      timing: [8, 22]
+    - provider: "remix"
+      display_name: "Remix + tRPC"
+      model_id: "remix-trpc"
+      rpm: 10
+      timing: [11, 26]
+    - provider: "nuxt"
+      display_name: "Nuxt + Supabase"
+      model_id: "nuxt-supabase"
+      rpm: 10
+      timing: [9, 23]
+    - provider: "astro"
+      display_name: "Astro + Hono"
+      model_id: "astro-hono"
+      rpm: 10
+      timing: [10, 25]
+
+  tasks:
+    - "setup - project scaffolding - v1"
+    - "setup - tailwind and component library - v1"
+    - "database - schema design and migrations - v1"
+    - "auth - email and password signup - v1"
+    - "auth - OAuth social login - v1"
+    - "api - REST endpoints for users - v1"
+    - "api - CRUD operations for resources - v1"
+    - "ui - landing page with hero section - v1"
+    - "ui - pricing page with toggle - v1"
+    - "ui - user dashboard layout - v1"
+    - "feature - form validation and error handling - v1"
+    - "feature - file upload with drag and drop - v1"
+    - "feature - search with autocomplete - v1"
+    - "feature - real-time notifications - v1"
+    - "integration - Stripe payment flow - v1"
+    - "integration - transactional email service - v1"
+    - "ui - admin panel with data tables - v1"
+    - "ui - settings page with preferences - v1"
+    - "testing - unit test suite - v1"
+    - "testing - integration test suite - v1"
+    - "testing - end to end test suite - v1"
+    - "perf - image optimization and lazy loading - v1"
+    - "perf - bundle analysis and code splitting - v1"
+    - "security - rate limiting and CORS - v1"
+    - "security - input sanitization and CSP - v1"
+    - "devops - Docker containerization - v1"
+    - "devops - CI pipeline configuration - v1"
+    - "deploy - staging environment setup - v1"
+    - "deploy - production deploy and DNS - v1"
+    - "launch - lighthouse audit and final checks - v1"
+
+  error_rate: 0.10
+  error_messages:
+    - "build failed - dependency conflict detected"
+    - "type error in module resolution"
+    - "test suite failed - 3 assertions broken"
+    - "ESLint found 12 errors"
+    - "out of memory during build"
+
+# ---------------------------------------------------------------------------
+# Announcer config
+# ---------------------------------------------------------------------------
+
+completion_marker: "all tasks in all configurations have finished on all providers"
+
+leaderboard_command: >
+  grep "task has finished" {log_file}
+  | sed 's/.*] //'
+  | cut -d: -f1-2
+  | sort | uniq -c | sort -rn
+
+contestants:
+  - "React + Express"
+  - "Next.js + Prisma"
+  - "SvelteKit + Drizzle"
+  - "Remix + tRPC"
+  - "Nuxt + Supabase"
+  - "Astro + Hono"
+
+provider_short_names:
+  react: "React"
+  next: "Next.js"
+  svelte: "SvelteKit"
+  remix: "Remix"
+  nuxt: "Nuxt"
+  astro: "Astro"
+
+persona: |
+  Agile sprint commentator narrating a hackathon-style race to ship a web app.
+  Dev metaphors: shipping features, clearing the backlog, pushing to prod.
+  Call out which stack is ahead on task completion and who just hit a build failure.
+  Treat ERR lines as blockers -- dependency hell, flaky tests, broken builds.
+  Celebrate milestones like first deploy and passing test suites.
+  2-4 sentences, under 80 words, plain ASCII only.
+
+voice: "am_adam"
+speed: 0.95
+
+log_lines_per_minute: 50

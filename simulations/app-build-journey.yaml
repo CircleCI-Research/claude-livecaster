@@ -1,0 +1,91 @@
+# App Build Journey — solo narration of building a Next.js SaaS app
+#
+# One coding agent builds a complete SaaS application from scratch.
+# No competition — just the journey from `create-next-app` to launch.
+
+name: "App Build Journey"
+
+# ---------------------------------------------------------------------------
+# Simulation data
+# ---------------------------------------------------------------------------
+
+simulation:
+  runs:
+    - provider: "agent"
+      display_name: "Next.js SaaS App"
+      model_id: "nextjs-saas"
+      rpm: 10
+      timing: [15, 40]
+
+  tasks:
+    - "scaffold - create-next-app with TypeScript - v1"
+    - "scaffold - install Tailwind and shadcn-ui - v1"
+    - "scaffold - configure ESLint and Prettier - v1"
+    - "database - design Postgres schema with Prisma - v1"
+    - "database - seed script with sample data - v1"
+    - "auth - NextAuth with email magic links - v1"
+    - "auth - Google OAuth provider - v1"
+    - "auth - role-based access control middleware - v1"
+    - "ui - landing page with hero and CTA - v1"
+    - "ui - pricing page with monthly and annual toggle - v1"
+    - "ui - signup and onboarding flow - v1"
+    - "feature - user dashboard with activity feed - v1"
+    - "feature - settings page with profile editor - v1"
+    - "feature - team invitation system - v1"
+    - "integration - Stripe checkout and billing portal - v1"
+    - "integration - webhook handler for payment events - v1"
+    - "integration - transactional email with Resend - v1"
+    - "feature - file upload with S3 presigned URLs - v1"
+    - "feature - global search with command palette - v1"
+    - "ui - admin panel with user management - v1"
+    - "testing - unit tests for API routes - v1"
+    - "testing - integration tests for auth flow - v1"
+    - "testing - Playwright e2e test suite - v1"
+    - "perf - image optimization and next-image - v1"
+    - "perf - bundle analysis and dynamic imports - v1"
+    - "security - rate limiting on API routes - v1"
+    - "security - CSP headers and input sanitization - v1"
+    - "deploy - Vercel project setup and env vars - v1"
+    - "deploy - custom domain and DNS configuration - v1"
+    - "launch - Lighthouse audit scoring above 90 - v1"
+
+  error_rate: 0.06
+  error_messages:
+    - "type error: Property does not exist on type"
+    - "Prisma migration failed: column already exists"
+    - "build error: module not found"
+    - "test failed: expected 200 but got 401"
+
+# ---------------------------------------------------------------------------
+# Announcer config
+# ---------------------------------------------------------------------------
+
+completion_marker: "all tasks in all configurations have finished on all providers"
+
+leaderboard_command: >
+  grep "task has finished" {log_file}
+  | sed 's/.*] //'
+  | cut -d: -f3-
+  | sed 's/: task has finished.*//'
+  | tail -8
+
+contestants:
+  - "Next.js SaaS App"
+
+provider_short_names:
+  agent: "Agent"
+
+persona: |
+  Encouraging pair programmer and dev mentor narrating a solo app build.
+  Speak as if sitting next to the developer, watching them work.
+  Celebrate completed milestones. Empathize with errors and setbacks.
+  Note the overall progress -- how far through the build we are.
+  No competition references -- this is a journey, not a race.
+  Example: "Auth is in place, the dashboard is looking great -- now we are
+  wiring up Stripe. This is where it gets real."
+  2-4 sentences, under 80 words, plain ASCII only.
+
+voice: "af_heart"
+speed: 0.9
+
+log_lines_per_minute: 50
