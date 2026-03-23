@@ -8,7 +8,7 @@ The voice announcer can't tell the difference from a real run.
 Usage:
     python3 scripts/simulate.py <log_file> <num_tasks> <speed> [--scenario <yaml_path>]
 
-    log_file       — output path (default: logs/eval.log)
+    log_file       — output path (default: logs/activity.log)
     num_tasks      — tasks per contestant (default: 15)
     speed          — simulation speed multiplier (default: 1, higher = faster)
     --scenario     — path to a simulation YAML file (optional; uses built-in defaults if omitted)
@@ -84,7 +84,7 @@ def parse_args():
             positional.append(args[i])
             i += 1
 
-    log_file = positional[0] if len(positional) > 0 else "logs/eval.log"
+    log_file = positional[0] if len(positional) > 0 else "logs/activity.log"
     num_tasks = int(positional[1]) if len(positional) > 1 else 15
     speed = float(positional[2]) if len(positional) > 2 else 1.0
 

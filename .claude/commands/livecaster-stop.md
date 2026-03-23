@@ -16,7 +16,7 @@ Use the Bash tool to run:
 **1. Kill the process and finalize transcript**
 ```bash
 RESULTS_DIR=$(cat /tmp/.livecaster_results_dir 2>/dev/null || echo ".")
-LOG_FILE=$(cat /tmp/.livecaster_log_file 2>/dev/null || echo "logs/eval.log")
+LOG_FILE=$(cat /tmp/.livecaster_log_file 2>/dev/null || echo "logs/activity.log")
 TRANSCRIPT="$RESULTS_DIR/transcript.txt"
 if [ -f /tmp/.livecaster_pid ]; then
   PID=$(cat /tmp/.livecaster_pid)
@@ -43,7 +43,7 @@ echo "The race has been stopped. Check the transcript for the full play by play.
 **3. Show final leaderboard from the log (if available)**
 Read the leaderboard_command from livecaster.yaml (default below), substitute {log_file}:
 ```bash
-LOG_FILE=$(cat /tmp/.livecaster_log_file 2>/dev/null || echo "logs/eval.log")
+LOG_FILE=$(cat /tmp/.livecaster_log_file 2>/dev/null || echo "logs/activity.log")
 if [ -f "$LOG_FILE" ]; then
   echo ""
   echo "=== Final Leaderboard (tasks completed per contestant) ==="
