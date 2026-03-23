@@ -2,6 +2,7 @@
 results/
 transcript.txt
 results_summary.md
+livecaster.yaml
 
 # TTS model files (user downloads locally)
 *.onnx
