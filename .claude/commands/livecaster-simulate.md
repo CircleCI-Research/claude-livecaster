@@ -18,23 +18,28 @@ Parse $ARGUMENTS:
 
 If no scenario name was provided in $ARGUMENTS, use AskUserQuestion to ask:
 "Pick a simulation scenario:"
-With options:
+With options (AskUserQuestion has a 4-option limit, so use two pages):
 1. AI Model Race — Six AI models compete on coding and reasoning tasks (the classic)
-2. Full-Stack Sprint — Six tech stacks race to ship the same web app
-3. Pipeline Wars — Six microservice CI pipelines compete (dual-voice broadcast!)
-4. Code Review Roundup — Five PRs race through the review gauntlet
-5. App Build Journey — Solo narration: one agent builds a Next.js SaaS app from scratch
-6. Deploy Day — Solo narration: a production deployment from staging to full rollout
-7. Incident Response — Solo narration: a P1 production incident from alert to resolution
+2. Pipeline Wars — Six microservice CI pipelines compete (dual-voice broadcast!)
+3. App Build Journey — Solo: one agent builds a Next.js SaaS app from scratch
+4. More scenarios...
+
+If the user picks "More scenarios...", use AskUserQuestion again:
+"More scenarios:"
+With options:
+1. Full-Stack Sprint — Six tech stacks race to ship the same web app
+2. Code Review Roundup — Five PRs race through the review gauntlet
+3. Deploy Day — Solo: a production deployment from staging to full rollout
+4. Incident Response — Solo: a P1 production incident from alert to resolution
 
 Map the selection to a scenario file:
-1 → `simulations/ai-model-race.yaml`
-2 → `simulations/full-stack-sprint.yaml`
-3 → `simulations/pipeline-wars.yaml`
-4 → `simulations/code-review-roundup.yaml`
-5 → `simulations/app-build-journey.yaml`
-6 → `simulations/deploy-day.yaml`
-7 → `simulations/incident-response.yaml`
+AI Model Race → `simulations/ai-model-race.yaml`
+Pipeline Wars → `simulations/pipeline-wars.yaml`
+App Build Journey → `simulations/app-build-journey.yaml`
+Full-Stack Sprint → `simulations/full-stack-sprint.yaml`
+Code Review Roundup → `simulations/code-review-roundup.yaml`
+Deploy Day → `simulations/deploy-day.yaml`
+Incident Response → `simulations/incident-response.yaml`
 
 If a scenario name was provided as an arg, map it to `simulations/<name>.yaml`.
 
