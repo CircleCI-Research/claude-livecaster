@@ -23,7 +23,7 @@ Use the configuration values for persona, voice/voices, speed, completion_marker
 Resolve paths and compute tail size:
 ```bash
 RESULTS_DIR=$(cat /tmp/.livecaster_results_dir 2>/dev/null || echo ".")
-LOG_FILE=$(cat /tmp/.livecaster_log_file 2>/dev/null || echo "logs/eval.log")
+LOG_FILE=$(cat /tmp/.livecaster_log_file 2>/dev/null || echo "logs/activity.log")
 TRANSCRIPT="$RESULTS_DIR/transcript.txt"
 INTERVAL_MINS=$(cat /tmp/.livecaster_loop_interval_mins 2>/dev/null || echo "5")
 LOG_LINES_PER_MINUTE=50

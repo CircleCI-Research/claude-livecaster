@@ -85,7 +85,7 @@ fi
 TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 SCENARIO_SLUG=$(basename "$SCENARIO_FILE" .yaml)
 RESULTS_DIR="results/simulation/$SCENARIO_SLUG/$(date '+%Y-%m-%d')/$(date '+%H-%M-%S')"
-LOG_FILE="$RESULTS_DIR/eval.log"
+LOG_FILE="$RESULTS_DIR/activity.log"
 mkdir -p "$RESULTS_DIR"
 echo "$RESULTS_DIR" > /tmp/.livecaster_results_dir
 echo "$LOG_FILE" > /tmp/.livecaster_log_file

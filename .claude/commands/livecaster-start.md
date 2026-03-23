@@ -22,7 +22,7 @@ Note settings from config. Defaults: voice=am_michael, speed=0.9
 If no log file path was provided in args, use AskUserQuestion to ask:
 "What log file should LiveCaster watch?"
 With options:
-1. logs/eval.log (default)
+1. logs/activity.log (default)
 2. Let me specify a path
 
 If they choose option 2, ask a follow-up question for the path.
