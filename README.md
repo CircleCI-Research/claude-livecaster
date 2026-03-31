@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://youtu.be/5q6fjDWF3Cs">
+  <a href="https://youtu.be/CW0kyaeQ4Gg?si=uyTVNHxpFXQrPCdY">
   <img width="640" height="357" alt="Claude-LiveCaster__Gemini_Generated_Image_3774343774343774__medium" src="https://github.com/user-attachments/assets/fa9ff7c3-cab6-4e0f-b054-6c624c854df4" />
   </a>
 </div>
@@ -8,7 +8,7 @@
 
 Real-time AI voice announcer for races, benchmarks, and long-running agent processes in Claude Code. Watches your logs, generates sports-style play-by-play commentary, and speaks it aloud using fast local text-to-speech (TTS). Powered by Claude. No cloud TTS APIs required.
 
-## [See it in action!](https://youtu.be/5q6fjDWF3Cs) 🎥
+## [See it in action!](https://youtu.be/CW0kyaeQ4Gg?si=uyTVNHxpFXQrPCdY) 🎥
 
 <div align="center">
   
@@ -17,7 +17,7 @@ https://github.com/user-attachments/assets/be8cf774-b16b-409e-9bbf-ee1789cc7227
 
 </div>
 
-GitHub limits uploaded video file sizes. For clearer video, [watch this on YouTube](https://youtu.be/5q6fjDWF3Cs).
+GitHub limits uploaded video file sizes. For clearer video, [watch this on YouTube](https://youtu.be/CW0kyaeQ4Gg?si=uyTVNHxpFXQrPCdY).
 
 ---
 
